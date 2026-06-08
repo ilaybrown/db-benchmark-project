@@ -1,0 +1,18 @@
+postgres:
+  host: "POSTGRES_HOST"
+  port: 5432
+  database: "benchmark_db"
+  user: "postgres"
+  password: "POSTGRES_PASSWORD"
+
+clickhouse:
+  host: "CLICKHOUSE_HOST"
+  port: 8123
+  database: "benchmark_db"
+  user: "default"
+  password: "CLICKHOUSE_PASSWORD"
+
+benchmark:
+  warmup_runs: 2
+  measured_runs: 10
+  output_file: "results/benchmark_results.csv"
