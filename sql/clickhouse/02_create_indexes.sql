@@ -1,0 +1,1 @@
+-- ClickHouse sorting keys, partitions, and projections will be defined after the final schema is known.

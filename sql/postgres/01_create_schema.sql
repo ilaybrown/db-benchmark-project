@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS noisy_neighbors (
+    id BIGSERIAL PRIMARY KEY
+);
