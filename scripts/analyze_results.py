@@ -25,12 +25,15 @@ def main():
     measured["elapsed_seconds"] = measured["elapsed_seconds"].astype(float)
 
     summary = (
-        measured
-        .groupby(["query_name", "database"])["elapsed_seconds"]
-        .agg(["count", "mean", "median", "min", "max", "std"])
-        .reset_index()
-        .sort_values(["query_name", "database"])
-    )
+    measured
+    .groupby(["query_name", "database"])["elapsed_seconds"]
+    .agg([
+        "count", "mean", "median", "min", "max", "std",
+        ("p99", lambda x: x.quantile(0.99))
+    ])
+    .reset_index()
+    .sort_values(["query_name", "database"])
+)
 
     SUMMARY_PATH.parent.mkdir(parents=True, exist_ok=True)
     summary.to_csv(SUMMARY_PATH, index=False)
