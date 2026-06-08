@@ -1,5 +1,8 @@
+from benchmark.runner import run_benchmark
+
+
 def main():
-    print("Benchmark runner will be implemented here.")
+    run_benchmark()
 
 
 if __name__ == "__main__":
