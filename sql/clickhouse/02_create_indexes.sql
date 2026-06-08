@@ -1,1 +1,2 @@
--- ClickHouse sorting keys, partitions, and projections will be defined after the final schema is known.
+-- ClickHouse physical optimization is mainly defined by the MergeTree ORDER BY key.
+-- Additional data-skipping indexes can be added later only if needed.
