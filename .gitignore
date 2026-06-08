@@ -9,7 +9,6 @@ venv/
 config/config.yaml
 
 # Data files
-data/*.csv
 data/*.parquet
 data/*.json
 
@@ -22,3 +21,6 @@ results/*.xlsx
 .DS_Store
 .vscode/
 .idea/
+
+# The benchmark CSV is intentionally included because it is small and required for reproducibility.
+!data/noisy_neighbors_reports.csv
