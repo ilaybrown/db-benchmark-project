@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: benchmark_postgres
+    environment:
+      POSTGRES_DB: benchmark_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/postgres:/docker-entrypoint-initdb.d
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    container_name: benchmark_clickhouse
+    environment:
+      CLICKHOUSE_DB: benchmark_db
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: clickhouse_password
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./sql/clickhouse:/docker-entrypoint-initdb.d
+
+volumes:
+  postgres_data:
+  clickhouse_data:
