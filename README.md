@@ -6,8 +6,8 @@ The benchmark runner connects to both databases, runs the same logical query wor
 
 ## Architecture
 
-Benchmark Runner Machine -> PostgreSQL VM  
-Benchmark Runner Machine -> ClickHouse VM
+VM1 = runner
+VM2 = both PostgreSQL and ClickHouse
 
 ## Main Goals
 
