@@ -1,0 +1,11 @@
+Benchmark executed from VM1 runner against PostgreSQL and ClickHouse on VM2.
+
+Runner VM: course-group_01-vm1
+DB VM: course-group_01-vm2
+Warmup runs: 2
+Measured runs: 10
+
+Results:
+- ClickHouse was faster on all three queries.
+- Query 2 showed the largest gap (6x faster).
+- Query 3 had one ClickHouse runtime spike, median is more representative than mean.
