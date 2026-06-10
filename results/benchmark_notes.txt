@@ -7,5 +7,7 @@ Measured runs: 10
 
 Results:
 - ClickHouse was faster on all three queries.
-- Query 2 showed the largest gap (6x faster).
-- Query 3 had one ClickHouse runtime spike, median is more representative than mean.
+- Query 3 showed the largest median speedup: about 7.22x faster.
+- Query 2 was also significantly faster on ClickHouse: about 6.06x by median runtime.
+- Query 3 had one ClickHouse runtime spike, so median is more representative than mean.
+- Row counts matched between PostgreSQL and ClickHouse for every query.
