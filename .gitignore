@@ -1,4 +1,3 @@
-```gitignore
 # Environment variables
 .env
 .env.*
@@ -60,4 +59,3 @@ results/tmp/
 
 # Docker local override files
 docker-compose.override.yml
-```
