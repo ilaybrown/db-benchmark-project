@@ -1,35 +1,185 @@
 # PostgreSQL vs ClickHouse Benchmark Project
 
-This project compares PostgreSQL and ClickHouse using a direct SQL benchmark.
+This project benchmarks PostgreSQL and ClickHouse on the same dataset and the same query workload.
 
-The benchmark runner connects to both databases, runs the same logical query workload, measures execution time, and saves the results for analysis.
+The benchmark runs from a dedicated runner machine and measures end-to-end query latency using warmup runs and repeated measured runs.
+
+## Project Reports
+
+The main project deliverables are available here:
+
+* [Benchmark Summary Report](reports/benchmark_report.pdf)
+* [Benchmark Queries](reports/benchmark_queries.pdf)
+* [ACID Comparison: PostgreSQL vs ClickHouse](reports/acid_postgresql_clickhouse.pdf)
+
+## Bottom Line
+
+ClickHouse was faster than PostgreSQL on all three benchmark queries.
+
+| Query | Median Speedup |
+| ----- | -------------: |
+| Q1    |          1.35x |
+| Q2    |          6.06x |
+| Q3    |          7.22x |
+
+The full benchmark analysis is available in the [Benchmark Summary Report](reports/benchmark_report.pdf).
 
 ## Architecture
 
-VM1 = runner
-VM2 = both PostgreSQL and ClickHouse
+The benchmark uses two Azure virtual machines:
 
-## Main Goals
+* **VM1** — benchmark runner machine.
+* **VM2** — database machine running both PostgreSQL and ClickHouse.
 
-- Load the same dataset into PostgreSQL and ClickHouse
-- Define comparable schemas
-- Run the same SQL query workload
-- Repeat each query multiple times
-- Measure end-to-end query latency
-- Save results to CSV
-- Compare PostgreSQL and ClickHouse performance
+```text
+VM1 benchmark runner
+        |
+        | SQL queries
+        v
+VM2 PostgreSQL + ClickHouse
+```
+
+Both databases use the same dataset, the same workload, and the same benchmark runner.
+
+## Dataset
+
+The benchmark uses:
+
+```text
+data/noisy_neighbors_reports.csv
+```
+
+The dataset contains 67,500 NYC noise complaint records.
+
+## Benchmark Design
+
+For each query and each database:
+
+* 2 warmup runs are executed first and discarded.
+* 10 measured runs are executed and saved.
+* Runtime statistics are calculated from the measured runs only.
+
+The benchmark measures:
+
+* Mean
+* Median
+* Minimum
+* Maximum
+* Standard deviation
+* p99
 
 ## Project Structure
 
-- `sql/postgres/` — PostgreSQL schema and setup SQL
-- `sql/clickhouse/` — ClickHouse schema and setup SQL
-- `sql/queries/` — benchmark queries
-- `benchmark/` — Python benchmark runner
-- `scripts/` — loading and execution scripts
-- `config/` — example configuration
-- `docs/` — setup and experiment notes
-- `results/` — benchmark outputs, ignored by Git
+```text
+db-benchmark-project/
+├── benchmark/              # Python benchmark runner
+├── config/                 # Example benchmark configuration
+├── data/                   # Benchmark dataset
+├── docs/                   # Additional documentation and notes
+├── reports/                # Final PDF reports
+├── results/                # Benchmark CSV outputs and notes
+├── scripts/                # Data loading and result analysis scripts
+├── sql/                    # Schemas, indexes, and benchmark queries
+├── .env.example            # Example environment variables
+├── .gitignore
+├── docker-compose.yml      # PostgreSQL and ClickHouse containers
+├── README.md
+└── requirements.txt
+```
+
+## How to Re-run the Benchmark
+
+### 1. Start the Azure VMs
+
+```bash
+az vm start -g course-group_01 -n course-group_01-vm1
+az vm start -g course-group_01 -n course-group_01-vm2
+```
+
+### 2. Start the databases on VM2
+
+```bash
+az ssh vm -g course-group_01 -n course-group_01-vm2
+cd ~/db-benchmark-project
+git pull
+docker compose up -d
+docker ps
+exit
+```
+
+### 3. Run the benchmark from VM1
+
+```bash
+az ssh vm -g course-group_01 -n course-group_01-vm1
+cd ~/db-benchmark-project
+git pull
+source .venv/bin/activate
+python scripts/load_postgres.py
+python scripts/load_clickhouse.py
+python -m benchmark.main
+python scripts/analyze_results.py
+```
+
+### 4. Save updated results
+
+```bash
+git add results/
+git commit -m "Add benchmark results"
+git push
+```
+
+### 5. Stop the databases and deallocate the VMs
+
+```bash
+az ssh vm -g course-group_01 -n course-group_01-vm2
+cd ~/db-benchmark-project
+docker compose stop
+exit
+
+az vm deallocate -g course-group_01 -n course-group_01-vm1
+az vm deallocate -g course-group_01 -n course-group_01-vm2
+```
+
+Do not run:
+
+```bash
+docker compose down -v
+```
+
+The `-v` flag deletes the database volumes and requires reloading the data.
+
+## Environment Variables
+
+Create a local `.env` file from the example:
+
+```bash
+cp .env.example .env
+```
+
+Then update the database host values:
+
+```env
+POSTGRES_HOST=<VM2_PRIVATE_IP>
+POSTGRES_PORT=5432
+POSTGRES_DB=benchmark_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres_password
+
+CLICKHOUSE_HOST=<VM2_PRIVATE_IP>
+CLICKHOUSE_PORT=8123
+CLICKHOUSE_DB=benchmark_db
+CLICKHOUSE_USER=default
+CLICKHOUSE_PASSWORD=clickhouse_password
+```
+
+The `.env` file should not be committed to GitHub.
 
 ## Important Notes
 
-Do not commit real credentials, VM IPs, passwords, SSH keys, or full datasets.
+* PostgreSQL and ClickHouse both run on VM2.
+* The benchmark runner runs from VM1.
+* The same dataset is loaded into both databases.
+* Results are calculated only from the 10 measured runs.
+* Median runtime is the best primary metric when runtime spikes exist.
+* Never commit `.env`.
+* Never run `docker compose down -v` unless you intentionally want to delete the database volumes.
