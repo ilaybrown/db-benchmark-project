@@ -73,9 +73,7 @@ The benchmark measures:
 ```text
 db-benchmark-project/
 ├── benchmark/              # Python benchmark runner
-├── config/                 # Example benchmark configuration
 ├── data/                   # Benchmark dataset
-├── docs/                   # Additional documentation and notes
 ├── reports/                # Final PDF reports
 ├── results/                # Benchmark CSV outputs and notes
 ├── scripts/                # Data loading and result analysis scripts
