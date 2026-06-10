@@ -1,26 +1,63 @@
-# Python
+```gitignore
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python cache files
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# Virtual environments
 .venv/
 venv/
+env/
+ENV/
 
-# Environment / secrets
-.env
-config/config.yaml
+# Python build/package files
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
 
-# Data files
-data/*.parquet
-data/*.json
+# Test and coverage files
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
 
-# Results
-results/*.csv
-results/*.json
-results/*.xlsx
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
 
-# OS / IDE
-.DS_Store
+# IDE/editor files
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# The benchmark CSV is intentionally included because it is small and required for reproducibility.
-!data/noisy_neighbors_reports.csv
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Temporary result files
+results/tmp/
+
+# Local database/data artifacts
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker local override files
+docker-compose.override.yml
+```
