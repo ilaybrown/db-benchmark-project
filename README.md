@@ -126,19 +126,20 @@ az vm start -g course-group_01 -n course-group_01-vm2
 az ssh vm -g course-group_01 -n course-group_01-vm2
 ```
 
-### If the repository is already cloned:
+If the repository is already cloned:
 ```bash
 cd ~/db-benchmark-project
 git pull
 ```
 
-### If this is the first time using the VM:
+If this is the first time using the VM:
 ```bash
 git clone https://github.com/ilaybrown/db-benchmark-project.git
 cd db-benchmark-project
 ```
+
+Start the database containers:
 ```bash
-# Start the database containers:
 docker compose up -d
 docker ps
 exit
@@ -159,8 +160,9 @@ git pull
 git clone https://github.com/ilaybrown/db-benchmark-project.git
 cd db-benchmark-project
 ```
+
+### Run the benchmark:
 ```bash
-# Run the benchmark:
 source .venv/bin/activate
 python scripts/load_postgres.py
 python scripts/load_clickhouse.py
