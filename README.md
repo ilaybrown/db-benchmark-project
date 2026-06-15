@@ -126,13 +126,13 @@ az vm start -g course-group_01 -n course-group_01-vm2
 az ssh vm -g course-group_01 -n course-group_01-vm2
 ```
 
-# If the repository is already cloned:
+### If the repository is already cloned:
 ```bash
 cd ~/db-benchmark-project
 git pull
 ```
 
-# If this is the first time using the VM:
+### If this is the first time using the VM:
 ```bash
 git clone https://github.com/ilaybrown/db-benchmark-project.git
 cd db-benchmark-project
@@ -149,12 +149,12 @@ exit
 ```bash
 az ssh vm -g course-group_01 -n course-group_01-vm1
 ```
-# If the repository is already cloned:
+### If the repository is already cloned:
 ```bash
 cd ~/db-benchmark-project
 git pull
 ```
-# If this is the first time using the VM:
+### If this is the first time using the VM:
 ```bash
 git clone https://github.com/ilaybrown/db-benchmark-project.git
 cd db-benchmark-project
