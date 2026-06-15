@@ -85,6 +85,32 @@ db-benchmark-project/
 └── requirements.txt
 ```
 
+## Environment Variables
+
+Create a local `.env` file from the example:
+
+```bash
+cp .env.example .env
+```
+
+Then update the database host values:
+
+```env
+POSTGRES_HOST=<VM2_PRIVATE_IP>
+POSTGRES_PORT=5432
+POSTGRES_DB=benchmark_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres_password
+
+CLICKHOUSE_HOST=<VM2_PRIVATE_IP>
+CLICKHOUSE_PORT=8123
+CLICKHOUSE_DB=benchmark_db
+CLICKHOUSE_USER=default
+CLICKHOUSE_PASSWORD=clickhouse_password
+```
+
+The `.env` file should not be committed to GitHub.
+
 ## How to Re-run the Benchmark
 
 ### 1. Start the Azure VMs
@@ -98,8 +124,16 @@ az vm start -g course-group_01 -n course-group_01-vm2
 
 ```bash
 az ssh vm -g course-group_01 -n course-group_01-vm2
+
+# If the repository is already cloned:
 cd ~/db-benchmark-project
 git pull
+
+# If this is the first time using the VM:
+git clone https://github.com/ilaybrown/db-benchmark-project.git
+cd db-benchmark-project
+
+# Start the database containers:
 docker compose up -d
 docker ps
 exit
@@ -109,8 +143,16 @@ exit
 
 ```bash
 az ssh vm -g course-group_01 -n course-group_01-vm1
+
+# If the repository is already cloned:
 cd ~/db-benchmark-project
 git pull
+
+# If this is the first time using the VM:
+git clone https://github.com/ilaybrown/db-benchmark-project.git
+cd db-benchmark-project
+
+# Run the benchmark:
 source .venv/bin/activate
 python scripts/load_postgres.py
 python scripts/load_clickhouse.py
@@ -146,31 +188,6 @@ docker compose down -v
 
 The `-v` flag deletes the database volumes and requires reloading the data.
 
-## Environment Variables
-
-Create a local `.env` file from the example:
-
-```bash
-cp .env.example .env
-```
-
-Then update the database host values:
-
-```env
-POSTGRES_HOST=<VM2_PRIVATE_IP>
-POSTGRES_PORT=5432
-POSTGRES_DB=benchmark_db
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres_password
-
-CLICKHOUSE_HOST=<VM2_PRIVATE_IP>
-CLICKHOUSE_PORT=8123
-CLICKHOUSE_DB=benchmark_db
-CLICKHOUSE_USER=default
-CLICKHOUSE_PASSWORD=clickhouse_password
-```
-
-The `.env` file should not be committed to GitHub.
 
 ## Important Notes
 
